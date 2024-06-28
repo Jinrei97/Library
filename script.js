@@ -35,6 +35,9 @@ function showOnTable() {
 }
 showOnTable();
 
+function changeBodyState(type) {
+   document.querySelector("body").className = type;
+}
 
 function preventDefault(form) {
     form.addEventListener("submit", e => {
@@ -44,7 +47,15 @@ function preventDefault(form) {
 
 const add = document.querySelector(".add");
 add.addEventListener("click", e => {
+    changeBodyState("form");
+
     const form = document.createElement("form");
+    let form_title = document.createElement("h2");
+    form_title.textContent = "Book data:";
+    form.appendChild(form_title);
+
+    const grid = document.createElement("div");
+    grid.className = "form_grid";
 
     function createInput(type, id, placeholder="", label_text, value="") {
         let div = document.createElement("div");
@@ -66,13 +77,14 @@ add.addEventListener("click", e => {
 
         div.appendChild(label);     
         div.appendChild(input);
-        form.appendChild(div);
+        grid.appendChild(div);
     }
 
     createInput("text", "book_name", "", "Title:");
     createInput("text", "author", "", "Author:");
     createInput("number", "book_length", "", "Number of Pages:");
     createInput("checkbox", "read", "", "Already read?");
+    form.appendChild(grid);
 
     let submit = document.createElement("button");
     submit.addEventListener("click", e => {
@@ -88,6 +100,7 @@ add.addEventListener("click", e => {
             properties["read"]
         );
         addBookToLibrary(book);
+        showOnTable();
     });
     submit.textContent = "Add book to library";
     form.appendChild(submit);
