@@ -39,9 +39,11 @@ function changeBodyState(type) {
    document.querySelector("body").className = type;
 }
 
-function preventDefault(form) {
+function formSubmitChange(form) {
     form.addEventListener("submit", e => {
         e.preventDefault();
+        changeBodyState("normal");
+        form.remove();
     });
 };
 
@@ -110,5 +112,5 @@ add.addEventListener("click", e => {
 
     document.querySelector("body").appendChild(form);
 
-    preventDefault(form);
+    formSubmitChange(form);
 });
