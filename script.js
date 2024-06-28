@@ -30,6 +30,18 @@ function showOnTable() {
             td.textContent = property;
             row.appendChild(td);
         }
+        let btn = document.createElement("button");
+        btn.className = "delete_row";
+        btn.textContent = "Remove";
+        btn.addEventListener("click", e => {
+            row.remove();
+            let book_index = table.children.length - 1;
+            library.splice(book_index - 1, 1);
+            showOnTable();
+        });
+        let td = document.createElement("td");
+        td.appendChild(btn);
+        row.appendChild(td);
         table.appendChild(row);
     }
 }

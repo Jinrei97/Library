@@ -22,7 +22,7 @@ body.form {
         border: 3px solid var(--color-table-border);
     }
     th {
-        width: 25%;
+        width: 20%;
         border: 3px solid var(--color-table-border);
         text-align: center;
     }
@@ -31,6 +31,13 @@ body.form {
         padding: 6px;
         text-align: center;
     }
+        .delete_row {
+            background-color: white;
+        }
+        .delete_row:hover {
+            background-color: grey;
+            color:white;
+        }
 
 form {
     grid-column: 2/3;
