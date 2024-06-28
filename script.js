@@ -1,4 +1,8 @@
-const library = [];
+const library = [
+    new Book("The Lord of the Rings", "Tolkien", 1077, "yes"),
+    new Book("The Lord of the Rings", "Tolkien", 1077, "yes"),
+    new Book("The Lord of the Rings", "Tolkien", 1077, "yes")
+];
 
 function Book(name, author, length, read) {
     this.name = name;
@@ -9,4 +13,20 @@ function Book(name, author, length, read) {
 
 function addBookToLibrary(book) {
     library.push(book);
+}
+
+
+function showOnTable() {
+    const table = document.querySelector("table");
+    for (let book of library) {
+        console.log(book)
+        let row = document.createElement("tr");
+        for (let property of Object.values(book)) {
+            console.log(property);
+            let td = document.createElement("td");
+            td.textContent = property;
+            row.appendChild(td);
+        }
+        table.appendChild(row);
+    }
 }
