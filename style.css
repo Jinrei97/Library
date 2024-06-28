@@ -14,9 +14,23 @@ body.form {
     height: 100vh;
 }
 
+button:hover {
+    background-color: rgb(97, 96, 96);
+    color:white;
+}
+
 .left {
+    display: flex;
+    flex-direction: column;
     grid-column: 1/2;
 }
+    .add {
+        align-self: center;
+        padding: 1rem;
+        margin-top: 1rem;
+        font-size: 18px;;
+
+    }
     table {
         border-collapse: collapse;
         border: 3px solid var(--color-table-border);
@@ -33,10 +47,6 @@ body.form {
     }
         .delete_row {
             background-color: white;
-        }
-        .delete_row:hover {
-            background-color: grey;
-            color:white;
         }
 
 form {

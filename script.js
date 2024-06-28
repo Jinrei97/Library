@@ -1,7 +1,10 @@
 const library = [
     new Book("The Lord of the Rings", "Tolkien", 1077, "yes"),
     new Book("The Lord of the Rings", "Tolkien", 1077, "yes"),
-    new Book("Rospo fa strada", "Tolkien", 1077, "yes")
+    new Book("Rospo fa strada", "Tolkien", 1077, "yes"),
+    new Book("a", "Tolkien", 1077, "yes"),
+    new Book("b", "Tolkien", 1077, "yes"),
+    new Book("c", "Tolkien", 1077, "yes")
 ];
 
 function Book(name, author, length, read) {
@@ -22,6 +25,7 @@ function resetTable(table) {
 }
 function showOnTable() {
     const table = document.querySelector("table");
+    let row_number = 0;
     resetTable(table);
     for (let book of library) {
         let row = document.createElement("tr");
@@ -32,17 +36,20 @@ function showOnTable() {
         }
         let btn = document.createElement("button");
         btn.className = "delete_row";
+        btn.id = String(row_number);
         btn.textContent = "Remove";
         btn.addEventListener("click", e => {
             row.remove();
-            let book_index = table.children.length - 1;
-            library.splice(book_index - 1, 1);
+            let book_index = Number(e.target.id);
+            library.splice(book_index, 1);
             showOnTable();
         });
         let td = document.createElement("td");
         td.appendChild(btn);
         row.appendChild(td);
         table.appendChild(row);
+
+        row_number++;
     }
 }
 showOnTable();
