@@ -45,10 +45,36 @@ function preventDefault(form) {
     });
 };
 
+function createInput(type, id, placeholder="", label_text, container) {
+    let div = document.createElement("div");
+    div.className = "container";        
+    let label = document.createElement("label");
+    let input = document.createElement("input");
+    label.textContent = label_text;
+    label.setAttribute("for", id);
+    input.setAttribute("type", type);
+    input.setAttribute("id", id);
+    input.setAttribute("name", id);
+    input.setAttribute("placeholder", placeholder);
+    if (type === "checkbox") {
+        input.value = "no";
+        input.addEventListener("change", e => {
+            input.value = (input.value === "no") ? "yes" : "no";
+        });
+    };
+    div.appendChild(label);     
+    div.appendChild(input);
+    container.appendChild(div);
+}
+
 const add = document.querySelector(".add");
 add.addEventListener("click", e => {
-    changeBodyState("form");
+    /* allow only one form at a time */
+    if (document.querySelector("form") !== null) {
+        return;
+    }
 
+    changeBodyState("form");
     const form = document.createElement("form");
     let form_title = document.createElement("h2");
     form_title.textContent = "Book data:";
@@ -57,33 +83,10 @@ add.addEventListener("click", e => {
     const grid = document.createElement("div");
     grid.className = "form_grid";
 
-    function createInput(type, id, placeholder="", label_text, value="") {
-        let div = document.createElement("div");
-        div.className = "container";        
-        let label = document.createElement("label");
-        let input = document.createElement("input");
-        label.textContent = label_text;
-        label.setAttribute("for", id);
-        input.setAttribute("type", type);
-        input.setAttribute("id", id);
-        input.setAttribute("name", id);
-        input.setAttribute("placeholder", placeholder);
-        if (type === "checkbox") {
-            input.value = "no";
-            input.addEventListener("change", e => {
-                input.value = (input.value === "no") ? "yes" : "no";
-            });
-        };
-
-        div.appendChild(label);     
-        div.appendChild(input);
-        grid.appendChild(div);
-    }
-
-    createInput("text", "book_name", "", "Title:");
-    createInput("text", "author", "", "Author:");
-    createInput("number", "book_length", "", "Number of Pages:");
-    createInput("checkbox", "read", "", "Already read?");
+    createInput("text", "book_name", "", "Title:", grid);
+    createInput("text", "author", "", "Author:", grid);
+    createInput("number", "book_length", "", "Number of Pages:", grid);
+    createInput("checkbox", "read", "", "Already read?", grid);
     form.appendChild(grid);
 
     let submit = document.createElement("button");
