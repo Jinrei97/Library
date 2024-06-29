@@ -2,9 +2,9 @@ const library = [
     new Book("The Lord of the Rings", "Tolkien", 1077, "yes"),
     new Book("The Lord of the Rings", "Tolkien", 1077, "yes"),
     new Book("Rospo fa strada", "Tolkien", 1077, "yes"),
-    new Book("a", "Tolkien", 1077, "yes"),
-    new Book("b", "Tolkien", 1077, "yes"),
-    new Book("c", "Tolkien", 1077, "yes")
+    new Book("a", "Tolkien", 1077, "no"),
+    new Book("b", "Tolkien", 1077, "no"),
+    new Book("c", "Tolkien", 1077, "no")
 ];
 
 function Book(name, author, length, read) {
@@ -18,20 +18,39 @@ function addBookToLibrary(book) {
     library.push(book);
 }
 
+function changeReadStatus(event) {
+    let book_index = event.target.className.slice(-1);
+    library[book_index]["read"] = (library[book_index]["read"] === "no") ? "yes" : "no";
+    showOnTable();
+};
+
 function resetTable(table) {
     while (table.children.length >= 2) {
         table.removeChild(table.lastChild);
     }
 }
+
 function showOnTable() {
     const table = document.querySelector("table");
     let row_number = 0;
     resetTable(table);
     for (let book of library) {
         let row = document.createElement("tr");
-        for (let property of Object.values(book)) {
+        for (let [key, property] of Object.entries(book)) {
             let td = document.createElement("td");
             td.textContent = property;
+            if (key === "read") {
+                let btn = document.createElement("button");
+                btn.className = `read_change_${row_number}`;
+                btn.addEventListener("click", e => {
+                    changeReadStatus(e);
+                });
+                if (row_number === 0) {
+                    td.id = "read_cell_first"
+                }
+                td.appendChild(btn);
+                td.className = "read_cell";
+            }   
             row.appendChild(td);
         }
         let btn = document.createElement("button");
