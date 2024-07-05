@@ -20,7 +20,7 @@ class Library {
     }
 
     addBookToLibrary(book) {
-        library.push(book);
+        this.library.push(book);
     }
 
     changeReadStatus(event) {
@@ -82,86 +82,102 @@ class Library {
     }
 }
 
-const library = new Library();
 
-library.showOnTable();
-
-function changeBodyState(type) {
-   document.querySelector("body").className = type;
-}
-
-function formSubmitChange(form) {
-    form.addEventListener("submit", e => {
-        e.preventDefault();
-        changeBodyState("normal");
-        form.remove();
-    });
-};
-
-function createInput(type, id, placeholder="", label_text, container) {
-    let div = document.createElement("div");
-    div.className = "container";        
-    let label = document.createElement("label");
-    let input = document.createElement("input");
-    label.textContent = label_text;
-    label.setAttribute("for", id);
-    input.setAttribute("type", type);
-    input.setAttribute("id", id);
-    input.setAttribute("name", id);
-    input.setAttribute("placeholder", placeholder);
-    if (type === "checkbox") {
-        input.value = "no";
-        input.addEventListener("change", e => {
-            input.value = (input.value === "no") ? "yes" : "no";
-        });
-    };
-    div.appendChild(label);     
-    div.appendChild(input);
-    container.appendChild(div);
-}
-
-const add = document.querySelector(".add");
-add.addEventListener("click", e => {
-    /* allow only one form at a time */
-    if (document.querySelector("form") !== null) {
-        return;
+class DisplayController {
+    constructor(library) {
+        this.body = document.querySelector("body"); 
+        this.add = document.querySelector(".add");
+        this.library = library;
+        this.setupAddButton(this.add);
     }
 
-    changeBodyState("form");
-    const form = document.createElement("form");
-    let form_title = document.createElement("h2");
-    form_title.textContent = "Book data:";
-    form.appendChild(form_title);
+    changeBodyState(type) {
+        this.body.className = type;
+    }
 
-    const grid = document.createElement("div");
-    grid.className = "form_grid";
+    formSubmitChange(form) {
+        form.addEventListener("submit", e => {
+            e.preventDefault();
+            this.changeBodyState("normal");
+            form.remove();
+        });
+    }
 
-    createInput("text", "book_name", "", "Title:", grid);
-    createInput("text", "author", "", "Author:", grid);
-    createInput("number", "book_length", "", "Number of Pages:", grid);
-    createInput("checkbox", "read", "", "Already read?", grid);
-    form.appendChild(grid);
+    createInput(type, id, placeholder="", label_text, container) {
+        let div = document.createElement("div");
+        div.className = "container";        
+        let label = document.createElement("label");
+        let input = document.createElement("input");
+        label.textContent = label_text;
+        label.setAttribute("for", id);
+        input.setAttribute("type", type);
+        input.setAttribute("id", id);
+        input.setAttribute("name", id);
+        input.setAttribute("placeholder", placeholder);
+        if (type === "checkbox") {
+            input.value = "no";
+            input.addEventListener("change", e => {
+                input.value = (input.value === "no") ? "yes" : "no";
+            });
+        };
+        div.appendChild(label);     
+        div.appendChild(input);
+        container.appendChild(div);
 
-    let submit = document.createElement("button");
-    submit.addEventListener("click", e => {
-        let inputs = document.querySelectorAll("input");
-        let properties = {};
-        for (let prop of inputs) {
-            properties[prop.getAttribute("id")] = prop.value;
-        }
-        console.log(properties);
-        let book = new Book(properties["book_name"],
-            properties["author"],
-            properties["book_length"],
-            properties["read"]
-        );
-        addBookToLibrary(book);
-        showOnTable();
-    });
-    submit.textContent = "Add book to library";
-    form.appendChild(submit);
+    }
 
-    document.querySelector("body").appendChild(form);
+    createSubmitButton(form) {
+        let submit = document.createElement("button");
+        submit.addEventListener("click", e => {
+            let inputs = document.querySelectorAll("input");
+            let properties = {};
+            for (let prop of inputs) {
+                properties[prop.getAttribute("id")] = prop.value;
+            }
+            console.log(properties);
+            let book = new Book(properties["book_name"],
+                properties["author"],
+                properties["book_length"],
+                properties["read"]
+            );
+            this.library.addBookToLibrary(book);
+            this.library.showOnTable();
+        });
+        submit.textContent = "Add book to library";
+        form.appendChild(submit);
+    }
 
-    formSubmitChange(form);
-});
+    setupAddButton(add) {
+        add.addEventListener("click", e => {
+            /* allow only one form at a time */
+            if (document.querySelector("form") !== null) {
+                return;
+            }
+
+            this.changeBodyState("form");
+            const form = document.createElement("form");
+            let form_title = document.createElement("h2");
+            form_title.textContent = "Book data:";
+            form.appendChild(form_title);
+
+            const grid = document.createElement("div");
+            grid.className = "form_grid";
+
+            this.createInput("text", "book_name", "", "Title:", grid);
+            this.createInput("text", "author", "", "Author:", grid);
+            this.createInput("number", "book_length", "", "Number of Pages:", grid);
+            this.createInput("checkbox", "read", "", "Already read?", grid);
+            form.appendChild(grid);
+
+            this.createSubmitButton.call(this, form);
+
+            document.querySelector("body").appendChild(form);
+
+            this.formSubmitChange(form);
+        });
+    }
+}
+
+const library = new Library();
+const display = new DisplayController(library);
+library.showOnTable();
