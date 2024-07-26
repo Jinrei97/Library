@@ -103,7 +103,14 @@ class DisplayController {
     });
   }
 
-  createInput(type, id, placeholder = "", label_text, container) {
+  createInput(
+    type,
+    id,
+    placeholder = "",
+    label_text,
+    container,
+    required = false
+  ) {
     let div = document.createElement("div");
     div.className = "container";
     let label = document.createElement("label");
@@ -120,9 +127,19 @@ class DisplayController {
         input.value = input.value === "no" ? "yes" : "no";
       });
     }
+    if (required) input.setAttribute("required", true);
     div.appendChild(label);
     div.appendChild(input);
     container.appendChild(div);
+  }
+
+  checkValidity(properties) {
+    console.log(properties);
+    console.log(typeof properties);
+    for (const [attr, value] of Object.entries(properties)) {
+      if (value === "") return false;
+    }
+    return true;
   }
 
   createSubmitButton(form) {
@@ -133,15 +150,17 @@ class DisplayController {
       for (let prop of inputs) {
         properties[prop.getAttribute("id")] = prop.value;
       }
-      console.log(properties);
-      let book = new Book(
-        properties["book_name"],
-        properties["author"],
-        properties["book_length"],
-        properties["read"]
-      );
-      this.library.addBookToLibrary(book);
-      this.library.showOnTable();
+      if (this.checkValidity(properties)) {
+        console.log(properties);
+        let book = new Book(
+          properties["book_name"],
+          properties["author"],
+          properties["book_length"],
+          properties["read"]
+        );
+        this.library.addBookToLibrary(book);
+        this.library.showOnTable();
+      }
     });
     submit.textContent = "Add book to library";
     form.appendChild(submit);
@@ -180,9 +199,16 @@ class DisplayController {
       const grid = document.createElement("div");
       grid.className = "form_grid";
 
-      this.createInput("text", "book_name", "", "Title:", grid);
-      this.createInput("text", "author", "", "Author:", grid);
-      this.createInput("number", "book_length", "", "Number of Pages:", grid);
+      this.createInput("text", "book_name", "", "Title:", grid, true);
+      this.createInput("text", "author", "", "Author:", grid, true);
+      this.createInput(
+        "number",
+        "book_length",
+        "",
+        "Number of Pages:",
+        grid,
+        true
+      );
       this.createInput("checkbox", "read", "", "Already read?", grid);
       form.appendChild(grid);
 
