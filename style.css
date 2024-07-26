@@ -77,6 +77,7 @@ form {
     padding: 2rem;
     padding-top: 2rem;
     display: grid;
+    position:relative;
 }
     h2 {
         margin-top: 0;
@@ -95,4 +96,15 @@ form {
     form > button {
         justify-self: center;
         width: 12rem;
+    }
+    .closeForm {
+        position:absolute;
+        top: 1rem;
+        right: 1rem;
+        background-image: url("./x.png");
+        background-size: 20px;
+        background-repeat: no-repeat;
+        background-position: center;
+        aspect-ratio: 1/1;
+        width: 25px;
     }
